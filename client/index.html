@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300&display=swap" rel="stylesheet"> 
+</head>
+<style>
+    body{
+        background-color: rgb(19, 19, 19);
+        box-sizing: border-box;
+       color: white;
+       font-family: 'Inconsolata', monospace;
+        
+    }
+    input{
+        border: none;
+        background-color: transparent;
+        color: white;
+        outline: none;
+        font-size: 16px;
+        font-family: 'Inconsolata', monospace;
+    }
+</style>
+<body>
+<div class="console">
+    
+</div>
+<input type="text" class="input">
+</body>
+<style>
+    span{
+        display:block;
+        color: teal;
+    }
+    p{
+        margin:0 0;
+    }
+</style>
+<script>
+    const app=document.querySelector('.console');
+    const date_str= `${new Date().getTime()}`;
+    const input=document.querySelector('.input');
+    input.addEventListener('keyup',(e)=>{
+        
+        if(e.keyCode==13){
+            app.innerHTML +=`<span>${input.value}</span>`
+            __push_data(input.value);
+            input.value='';
+        }
+       
+    })
+    
+    const __push_to_client=(data)=>{
+        data.response.forEach(each=> app.innerHTML+=`<p> ${date_str}: ${each} </p>`);
+        
+    }
+    const __init=()=>{
+        app.innerHTML=`${date_str}: Hello there, welcome to the CLI for COVID-19 test, What's your name? `
+    }
+    const __push_data= async (data)=>{
+     const res= await fetch('http://localhost:8000/req',{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({data})
+          })
+     const res_data=await res.json();
+    await __push_to_client(res_data);
+     
+    
+    }
+    __init();
+
+</script>
+</html>
